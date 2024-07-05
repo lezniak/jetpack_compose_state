@@ -41,8 +41,11 @@ class MainActivity : ComponentActivity() {
             mutableIntStateOf(0)
         }
         Column {
-            Text(text = "You have $count", modifier = modifier.padding(16.dp))
-            Button(onClick = { count++ }) {
+            if (count > 0) {
+                Text(text = "You have $count", modifier = modifier.padding(16.dp))
+            }
+
+            Button(onClick = { count++ }, enabled = count < 10) {
                 Text(text = "Increment")
             }
         }
