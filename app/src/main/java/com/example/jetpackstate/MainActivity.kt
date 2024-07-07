@@ -1,13 +1,22 @@
 package com.example.jetpackstate
 
 import android.os.Bundle
+import android.widget.ImageButton
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,15 +49,44 @@ class MainActivity : ComponentActivity() {
         var count by rememberSaveable {
             mutableIntStateOf(0)
         }
-        Column {
+        var isTaskShowed by rememberSaveable {
+            mutableStateOf(false)
+        }
+        Column(modifier) {
             if (count > 0) {
-                Text(text = "You have $count", modifier = modifier.padding(16.dp))
-            }
 
-            Button(onClick = { count++ }, enabled = count < 10) {
-                Text(text = "Increment")
+                if (!isTaskShowed){
+                    WellnessTaskItem(taskName = "Have you walk today?", onClose = { isTaskShowed = true })
+                }
+                    Text(text = "You have $count", modifier = modifier.padding(16.dp))
+            }
+            Row(){
+                Button(onClick = { count++ }, enabled = count < 10) {
+                    Text(text = "Increment")
+                }
+
+
+                if (count > 0)
+                Button(onClick = { count = 0 }, enabled = count < 10) {
+                    Text(text = "Clear")
+                }
             }
         }
         
+    }
+
+    @Composable
+    private fun WellnessTaskItem(taskName : String, onClose : () -> Unit ,modifier: Modifier = Modifier){
+        Card {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)) {
+                Text(text = taskName,modifier.weight(1f))
+                IconButton(onClick = onClose) {
+                    Icon(Icons.Filled.Close, contentDescription = null)
+                }
+            }
+        }
+
     }
 }
