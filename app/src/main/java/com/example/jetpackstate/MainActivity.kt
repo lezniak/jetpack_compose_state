@@ -38,36 +38,39 @@ class MainActivity : ComponentActivity() {
         setContent {
             JetpackstateTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    WatherCount(Modifier.padding(innerPadding))
+                    CounterMenu(Modifier.padding(innerPadding))
                 }
             }
         }
     }
 
     @Composable
-    private fun WatherCount(modifier: Modifier){
-        var count by rememberSaveable {
-            mutableIntStateOf(0)
+    private fun CounterMenu(modifier: Modifier){
+        var waterCounter by rememberSaveable {
+            mutableStateOf(0)
         }
-        var isTaskShowed by rememberSaveable {
-            mutableStateOf(false)
+        var juiceCounter by rememberSaveable {
+            mutableStateOf(1)
         }
         Column(modifier) {
-            if (count > 0) {
+            WaterCount(count = waterCounter, onIncrement = {waterCounter++}, onClear = {waterCounter=0})
+            WaterCount(count = juiceCounter, onIncrement = {juiceCounter*=2}, onClear = {juiceCounter=0})
+        }
+    }
+    @Composable
+    private fun WaterCount(modifier: Modifier = Modifier, count : Int, onIncrement : () -> Unit, onClear : () -> Unit){
 
-                if (!isTaskShowed){
-                    WellnessTaskItem(taskName = "Have you walk today?", onClose = { isTaskShowed = true })
-                }
+        Column(modifier) {
+            if (count > 0) {
                     Text(text = "You have $count", modifier = modifier.padding(16.dp))
             }
             Row(){
-                Button(onClick = { count++ }, enabled = count < 10) {
+                Button(onClick = { onIncrement()}, enabled = count < 10) {
                     Text(text = "Increment")
                 }
 
 
-                if (count > 0)
-                Button(onClick = { count = 0 }, enabled = count < 10) {
+                Button(onClick = { onClear() }, enabled = count >0 ) {
                     Text(text = "Clear")
                 }
             }
